@@ -3,13 +3,13 @@ main = "src/index.ts"
 compatibility_date = "2026-02-17"
 workers_dev = true
 
-routes = [{ pattern = "cf-worker-rules.holden.xyz/*", zone_name = "holden.xyz" }]
+routes = [{ pattern = "cf-worker-rules.holden.xyz", zone_name = "holden.xyz" }]
 
 [vars]
 # Update these after deploying origin-one and origin-two
 # Run: pnpm run deploy:origins and note the workers.dev URLs
-ORIGIN_ONE_HOST = "origin-one.spruce.workers.dev"
-ORIGIN_TWO_HOST = "origin-two.spruce.workers.dev"
+ORIGIN_ONE_HOST = "origin-one.holden.xyz"
+ORIGIN_TWO_HOST = "origin-two.holden.xyz"
 
 [observability]
 [observability.logs]

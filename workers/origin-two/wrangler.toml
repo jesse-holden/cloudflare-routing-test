@@ -1,6 +1,9 @@
 name = "origin-two"
 main = "src/index.ts"
 compatibility_date = "2026-02-17"
+workers_dev = true
+
+routes = [{ pattern = "origin-two.holden.xyz", zone_name = "holden.xyz" }]
 
 [observability]
 [observability.logs]
