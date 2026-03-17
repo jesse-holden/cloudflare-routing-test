@@ -23,6 +23,13 @@ export default {
     const origin_url = new URL(url.pathname, `https://${origin_host}`);
     const headers = new Headers(request.headers);
     headers.set("x-forwarded-host", url.hostname);
+
+    const client_ip = request.headers.get("CF-Connecting-IP");
+    if (client_ip) {
+      headers.set("X-Real-IP", client_ip);
+      headers.set("X-Forwarded-For", client_ip);
+    }
+
     return fetch(origin_url.toString(), {
       method: request.method,
       headers,

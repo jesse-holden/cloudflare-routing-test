@@ -177,6 +177,14 @@ TRANSFORM_RESPONSE=$(curl -s -X PUT "$CF_API/zones/$CLOUDFLARE_ZONE_ID/rulesets/
             \"x-forwarded-host\": {
               \"operation\": \"set\",
               \"expression\": \"http.host\"
+            },
+            \"X-Real-IP\": {
+              \"operation\": \"set\",
+              \"expression\": \"ip.src\"
+            },
+            \"X-Forwarded-For\": {
+              \"operation\": \"set\",
+              \"expression\": \"ip.src\"
             }
           }
         },
