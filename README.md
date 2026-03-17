@@ -4,22 +4,15 @@ Compares three Cloudflare methods for path-based origin routing. Two origin Work
 
 ## Architecture
 
-```
-                  holden.xyz
-        ┌──────────────────────────────────────┐
-        │                                      │
-cf-origin-rules     cf-snippet-rules     cf-worker-rules
-  .holden.xyz          .holden.xyz          .holden.xyz
-        │                    │                    │
-  Origin Rules          Snippet JS          Worker proxy
-  (Rulesets API)       (edge JS)          (TypeScript)
-        │                    │                    │
-        └────────────────────┴────────────────────┘
-                             │
-                  /page/:n (odd or even?)
-                   /         \
-            origin-one      origin-two
-          .workers.dev      .workers.dev
+```mermaid
+graph TD
+    A[cf-origin-rules.holden.xyz] -->|Origin Rules\nRulesets API| R{/page/:n\nodd or even?}
+    B[cf-snippet-rules.holden.xyz] -->|Snippet JS\nedge code| R
+    C[cf-worker-rules.holden.xyz] -->|Worker proxy\nTypeScript| R
+
+    R -->|odd| O1[origin-one\n.workers.dev]
+    R -->|even| O2[origin-two\n.workers.dev]
+    R -->|0 or non-numeric| E[404]
 ```
 
 **Routing rule (all three methods):**
