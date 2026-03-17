@@ -17,11 +17,15 @@ export default {
 
     const request_id = crypto.randomUUID();
     const headers_obj = Object.fromEntries(request.headers.entries());
-    const body = JSON.stringify({
-      server: SERVER_NAME,
-      request_id,
-      headers: headers_obj,
-    }, null, 2);
+    const body = JSON.stringify(
+      {
+        server: SERVER_NAME,
+        request_id,
+        headers: headers_obj,
+      },
+      null,
+      2,
+    );
     return new Response(body, {
       headers: { "Content-Type": "application/json" },
     });

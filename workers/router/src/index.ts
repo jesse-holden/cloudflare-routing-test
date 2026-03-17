@@ -18,8 +18,7 @@ export default {
       return new Response("Not Found", { status: 404 });
     }
 
-    const origin_host =
-      page_number % 2 !== 0 ? env.ORIGIN_ONE_HOST : env.ORIGIN_TWO_HOST;
+    const origin_host = page_number % 2 !== 0 ? env.ORIGIN_ONE_HOST : env.ORIGIN_TWO_HOST;
 
     const origin_url = new URL(url.pathname, `https://${origin_host}`);
     const headers = new Headers(request.headers);

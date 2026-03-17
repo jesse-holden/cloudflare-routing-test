@@ -47,15 +47,15 @@ CLOUDFLARE_API_TOKEN=    # Token with Zone:Edit + Origin Rules:Edit + Snippets:W
 
 ## Routing logic (all three methods)
 
-| Path         | Destination  |
-|--------------|--------------|
-| `/page/1`    | origin-one   |
-| `/page/2`    | origin-two   |
-| `/page/3`    | origin-one   |
-| `/page/10`   | origin-two   |
-| `/page/0`    | 404          |
-| `/page/abc`  | 404          |
-| `/`          | 404          |
+| Path        | Destination |
+| ----------- | ----------- |
+| `/page/1`   | origin-one  |
+| `/page/2`   | origin-two  |
+| `/page/3`   | origin-one  |
+| `/page/10`  | origin-two  |
+| `/page/0`   | 404         |
+| `/page/abc` | 404         |
+| `/`         | 404         |
 
 ## Scripts
 

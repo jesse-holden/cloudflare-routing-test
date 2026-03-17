@@ -17,11 +17,11 @@ graph TD
 
 **Routing rule (all three methods):**
 
-| Path | Response |
-|------|----------|
+| Path                               | Response                                    |
+| ---------------------------------- | ------------------------------------------- |
 | `/page/1`, `/page/3`, `/page/5`, … | `Hello from origin-one, request-id: <uuid>` |
 | `/page/2`, `/page/4`, `/page/6`, … | `Hello from origin-two, request-id: <uuid>` |
-| `/page/0`, `/page/abc`, `/`, `/*` | `404 Not Found` |
+| `/page/0`, `/page/abc`, `/`, `/*`  | `404 Not Found`                             |
 
 ---
 
@@ -117,10 +117,10 @@ pnpm run deploy:router
 
 In the Cloudflare dashboard for `holden.xyz`, create three proxied CNAME records:
 
-| Name | Target | Proxy |
-|------|--------|-------|
-| `cf-worker-rules` | `cf-worker-router.<your-account>.workers.dev` | Proxied |
-| `cf-origin-rules` | any placeholder origin (e.g. `origin-one.<your-account>.workers.dev`) | Proxied |
+| Name               | Target                                                                | Proxy   |
+| ------------------ | --------------------------------------------------------------------- | ------- |
+| `cf-worker-rules`  | `cf-worker-router.<your-account>.workers.dev`                         | Proxied |
+| `cf-origin-rules`  | any placeholder origin (e.g. `origin-one.<your-account>.workers.dev`) | Proxied |
 | `cf-snippet-rules` | any placeholder origin (e.g. `origin-one.<your-account>.workers.dev`) | Proxied |
 
 > For `cf-worker-rules`, you can alternatively add a [Worker Route](https://developers.cloudflare.com/workers/configuration/routing/routes/) pointing `cf-worker-rules.holden.xyz/*` at `cf-worker-router`.
