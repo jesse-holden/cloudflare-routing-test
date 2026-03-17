@@ -2,12 +2,14 @@
   "name": "cloudflare-routing-test",
   "version": "0.0.1",
   "private": true,
+  "packageManager": "pnpm@10.32.1",
   "scripts": {
     "deploy:origins": "pnpm --filter origin-one run deploy && pnpm --filter origin-two run deploy",
     "deploy:router": "pnpm --filter cf-worker-router run deploy",
     "deploy:all": "pnpm run deploy:origins && pnpm run deploy:router"
   },
   "devDependencies": {
+    "typescript": "^5.9.3",
     "wrangler": "^4.74.0"
   }
 }
