@@ -22,8 +22,8 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 # Configuration — update these after deploying the origin workers
 # ---------------------------------------------------------------------------
-ORIGIN_ONE_HOST="origin-one.spruce.workers.dev"
-ORIGIN_TWO_HOST="origin-two.spruce.workers.dev"
+ORIGIN_ONE_HOST="origin-one.holden.xyz"
+ORIGIN_TWO_HOST="origin-two.holden.xyz"
 SUBDOMAIN="cf-origin-rules.holden.xyz"
 
 # ---------------------------------------------------------------------------

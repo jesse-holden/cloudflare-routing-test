@@ -26,8 +26,8 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 # Configuration — update these after deploying the origin workers
 # ---------------------------------------------------------------------------
-ORIGIN_ONE_HOST="origin-one.spruce.workers.dev"
-ORIGIN_TWO_HOST="origin-two.spruce.workers.dev"
+ORIGIN_ONE_HOST="origin-one.holden.xyz"
+ORIGIN_TWO_HOST="origin-two.holden.xyz"
 SUBDOMAIN="cf-snippet-rules.holden.xyz"
 SNIPPET_NAME="routing_snippet"
 
@@ -79,7 +79,6 @@ export default {
     const origin_host =
       page_number % 2 !== 0 ? ORIGIN_ONE_HOST : ORIGIN_TWO_HOST;
 
-    const origin_url = new URL(url.pathname, \`https://\${origin_host}\`);
     const headers = new Headers(request.headers);
     headers.set("x-forwarded-host", url.hostname);
 
@@ -89,7 +88,9 @@ export default {
       headers.set("X-Forwarded-For", client_ip);
     }
 
-    return fetch(new Request(origin_url.toString(), { ...request, headers }));
+    const origin_url = new URL(url.pathname, \`https://\${origin_host}\`);
+
+    return fetch(origin_url.toString(), { method: request.method, headers, cf: { resolveOverride: url.hostname } });
   },
 };
 SNIPPET_EOF

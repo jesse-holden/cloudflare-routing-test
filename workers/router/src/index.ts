@@ -20,7 +20,6 @@ export default {
 
     const origin_host = page_number % 2 !== 0 ? env.ORIGIN_ONE_HOST : env.ORIGIN_TWO_HOST;
 
-    const origin_url = new URL(url.pathname, `https://${origin_host}`);
     const headers = new Headers(request.headers);
     headers.set("x-forwarded-host", url.hostname);
 
@@ -30,9 +29,12 @@ export default {
       headers.set("X-Forwarded-For", client_ip);
     }
 
+    const origin_url = new URL(url.pathname, `https://${origin_host}`);
+
     return fetch(origin_url.toString(), {
       method: request.method,
       headers,
-    });
+      cf: { resolveOverride: url.hostname },
+    } as RequestInit);
   },
 } satisfies ExportedHandler<Env>;
