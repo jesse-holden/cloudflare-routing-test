@@ -16,6 +16,14 @@ export default {
     }
 
     const request_id = crypto.randomUUID();
-    return new Response(`Hello from ${SERVER_NAME}, request-id: ${request_id}`);
+    const headers_obj = Object.fromEntries(request.headers.entries());
+    const body = JSON.stringify({
+      server: SERVER_NAME,
+      request_id,
+      headers: headers_obj,
+    }, null, 2);
+    return new Response(body, {
+      headers: { "Content-Type": "application/json" },
+    });
   },
 } satisfies ExportedHandler;
