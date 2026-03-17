@@ -2,6 +2,10 @@ name = "cf-worker-router"
 main = "src/index.ts"
 compatibility_date = "2026-02-17"
 
+routes = [
+  { pattern = "cf-worker-rules.holden.xyz/*", zone_name = "holden.xyz" }
+]
+
 [vars]
 # Update these after deploying origin-one and origin-two
 # Run: pnpm run deploy:origins and note the workers.dev URLs
