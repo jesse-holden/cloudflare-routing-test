@@ -130,3 +130,66 @@ else
   echo "$PUT_RESPONSE" | jq '.errors'
   exit 1
 fi
+
+# ---------------------------------------------------------------------------
+# Step 4: Add a Transform Rule to set x-forwarded-host before origin rewrite
+#
+# Uses http_request_late_transform phase (Modify Request Headers).
+# Captures http.host before Origin Rules rewrites the Host header.
+# ---------------------------------------------------------------------------
+echo "Fetching transform rulesets..."
+TRANSFORM_RULESETS=$(curl -s "$CF_API/zones/$CLOUDFLARE_ZONE_ID/rulesets" \
+  -H "$AUTH_HEADER")
+
+TRANSFORM_RULESET_ID=$(echo "$TRANSFORM_RULESETS" | jq -r '
+  .result[] | select(.phase == "http_request_late_transform") | .id
+')
+
+if [[ -z "$TRANSFORM_RULESET_ID" ]]; then
+  echo "No http_request_late_transform ruleset found — creating one..."
+  CREATE_TRANSFORM=$(curl -s -X POST "$CF_API/zones/$CLOUDFLARE_ZONE_ID/rulesets" \
+    -H "$AUTH_HEADER" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "name": "Transform Rules",
+      "kind": "zone",
+      "phase": "http_request_late_transform",
+      "rules": []
+    }')
+  TRANSFORM_RULESET_ID=$(echo "$CREATE_TRANSFORM" | jq -r '.result.id')
+  echo "Created transform ruleset: $TRANSFORM_RULESET_ID"
+else
+  echo "Found existing transform ruleset: $TRANSFORM_RULESET_ID"
+fi
+
+echo "Setting x-forwarded-host transform rule..."
+TRANSFORM_RESPONSE=$(curl -s -X PUT "$CF_API/zones/$CLOUDFLARE_ZONE_ID/rulesets/$TRANSFORM_RULESET_ID" \
+  -H "$AUTH_HEADER" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"rules\": [
+      {
+        \"description\": \"Set x-forwarded-host for cf-origin-rules subdomain\",
+        \"expression\": \"http.host eq \\\"$SUBDOMAIN\\\"\",
+        \"action\": \"rewrite\",
+        \"action_parameters\": {
+          \"headers\": {
+            \"x-forwarded-host\": {
+              \"operation\": \"set\",
+              \"expression\": \"http.host\"
+            }
+          }
+        },
+        \"enabled\": true
+      }
+    ]
+  }")
+
+SUCCESS=$(echo "$TRANSFORM_RESPONSE" | jq -r '.success')
+if [[ "$SUCCESS" == "true" ]]; then
+  echo "Transform rule deployed successfully."
+else
+  echo "Error deploying transform rule:"
+  echo "$TRANSFORM_RESPONSE" | jq '.errors'
+  exit 1
+fi

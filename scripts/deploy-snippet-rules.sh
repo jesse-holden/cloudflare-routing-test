@@ -80,7 +80,9 @@ export default {
       page_number % 2 !== 0 ? ORIGIN_ONE_HOST : ORIGIN_TWO_HOST;
 
     const origin_url = new URL(url.pathname, \`https://\${origin_host}\`);
-    return fetch(new Request(origin_url.toString(), request));
+    const headers = new Headers(request.headers);
+    headers.set("x-forwarded-host", url.hostname);
+    return fetch(new Request(origin_url.toString(), { ...request, headers }));
   },
 };
 SNIPPET_EOF

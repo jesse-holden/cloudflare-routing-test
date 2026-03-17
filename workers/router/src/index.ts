@@ -22,9 +22,11 @@ export default {
       page_number % 2 !== 0 ? env.ORIGIN_ONE_HOST : env.ORIGIN_TWO_HOST;
 
     const origin_url = new URL(url.pathname, `https://${origin_host}`);
+    const headers = new Headers(request.headers);
+    headers.set("x-forwarded-host", url.hostname);
     return fetch(origin_url.toString(), {
       method: request.method,
-      headers: request.headers,
+      headers,
     });
   },
 } satisfies ExportedHandler<Env>;
