@@ -1,0 +1,29 @@
+interface Env {
+  ORIGIN_ONE_HOST: string;
+  ORIGIN_TWO_HOST: string;
+}
+
+export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    const url = new URL(request.url);
+    const match = url.pathname.match(/^\/page\/(\d+)$/);
+
+    if (!match) {
+      return new Response("Not Found", { status: 404 });
+    }
+
+    const page_number = parseInt(match[1], 10);
+    if (page_number === 0) {
+      return new Response("Not Found", { status: 404 });
+    }
+
+    const origin_host =
+      page_number % 2 !== 0 ? env.ORIGIN_ONE_HOST : env.ORIGIN_TWO_HOST;
+
+    const origin_url = new URL(url.pathname, `https://${origin_host}`);
+    return fetch(origin_url.toString(), {
+      method: request.method,
+      headers: request.headers,
+    });
+  },
+} satisfies ExportedHandler<Env>;
